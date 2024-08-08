@@ -1,0 +1,13 @@
+record description {
+    title: string,
+    version: string,
+    author: string,
+    shortdesc: string,
+    description: string
+}
+
+allocate-memory: func(len: u32) -> u32
+
+descriptor: func() -> description
+activate: func()
+deactivate: func()
