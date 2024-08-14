@@ -179,14 +179,29 @@ mod vlc {
 
         pub fn datadir_list(path: &Path) -> Vec<PathBuf> {
             let path_str = path.to_str().unwrap();
-            let ptr = path_str.as_ptr();
-            let len = path_str.len();
+            let path_ptr = path_str.as_ptr();
+            let path_len = path_str.len();
+            let mut path_bufs = Vec::new();
+
             unsafe {
-                let ptr = config_datadir_list(ptr, len);
-                let cstr = CString::from_raw(ptr as *mut i8);
-                let str = cstr.to_string_lossy().to_string();
-                str.split(';').filter(|s| !s.is_empty()).map(|s| PathBuf::from(s)).collect()
+                let mut current_ptr = config_datadir_list(path_ptr, path_len);
+
+                loop {
+                    let str_ptr = u32::from_le_bytes(current_ptr.cast::<[u8; 4]>().read());
+
+                    if str_ptr == 0 {
+                        break;
+                    }
+
+                    let cstr = CString::from_raw(str_ptr as *mut i8);
+                    let path = cstr.to_string_lossy().to_string();
+                    path_bufs.push(PathBuf::from(path));
+
+                    current_ptr = current_ptr.add(4);
+                }
             }
+
+            path_bufs
         }
     }
 }
@@ -223,6 +238,7 @@ impl extension::Extension for Extension {
         let paths = vlc::config::datadir_list(std::path::Path::new("extensions"));
         vlc::msg::dbg(&format!("Data dir list: {:?}", paths));
 
+        /*
         vlc::config::put_int("vlcwasm_my-int", 42);
         vlc::msg::dbg(&format!("Test int: {}", vlc::config::get_int("vlcwasm_my-int")));
 
@@ -234,6 +250,7 @@ impl extension::Extension for Extension {
 
         vlc::config::put_bool("vlcwasm_my-bool", true);
         vlc::msg::dbg(&format!("Test bool: {}", vlc::config::get_bool("vlcwasm_my-bool")));
+        */
 
         vlc::msg::dbg(&format!("Playlist status: {}", vlc::playlist::status()));
 

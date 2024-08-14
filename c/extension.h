@@ -1,6 +1,5 @@
 #ifndef __BINDINGS_EXTENSION_H
 #define __BINDINGS_EXTENSION_H
-#include <stddef.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -11,7 +10,7 @@ extern "C"
   
   typedef struct {
     char *ptr;
-    size_t len;
+    int len;
   } extension_string_t;
   
   void extension_string_set(extension_string_t *ret, const char *s);
@@ -25,6 +24,7 @@ extern "C"
     extension_string_t description;
   } extension_description_t;
   void extension_description_free(extension_description_t *ptr);
+  uint32_t extension_allocate_memory(uint32_t len);
   void extension_descriptor(extension_description_t *ret0);
   void extension_activate(void);
   void extension_deactivate(void);

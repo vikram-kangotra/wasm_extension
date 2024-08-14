@@ -1,4 +1,11 @@
 #include "extension.h"
+#include <string.h>
+
+extern void msg_dbg(const char* message, int length);
+
+void vlc_msg_dbg(const char* message) {
+    msg_dbg(message, strlen(message));
+}
 
 void extension_descriptor(extension_description_t* ptr) {
     extension_string_set(&ptr->title, "test");
@@ -9,6 +16,7 @@ void extension_descriptor(extension_description_t* ptr) {
 }
 
 void extension_activate(void) {
+    vlc_msg_dbg("Hello, World!");
 }
 
 void extension_deactivate(void) {

@@ -50,6 +50,11 @@ void extension_description_free(extension_description_t *ptr) {
 
 __attribute__((aligned(4)))
 static uint8_t RET_AREA[40];
+__attribute__((export_name("allocate-memory")))
+int32_t __wasm_export_extension_allocate_memory(int32_t arg) {
+  uint32_t ret = extension_allocate_memory((uint32_t) (arg));
+  return (int32_t) (ret);
+}
 __attribute__((export_name("descriptor")))
 int32_t __wasm_export_extension_descriptor(void) {
   extension_description_t ret;
