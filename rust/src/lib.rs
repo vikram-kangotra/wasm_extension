@@ -224,6 +224,7 @@ impl extension::Extension for Extension {
             author: "VideoLAN".to_string(),
             shortdesc: "Test example".to_string(),
             description: "Test description".to_string(),
+            capabilities: vec!["menu".to_string(), "trigger".to_string()],
         }
     }
 

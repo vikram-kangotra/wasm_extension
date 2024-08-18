@@ -3,7 +3,8 @@ record description {
     version: string,
     author: string,
     shortdesc: string,
-    description: string
+    description: string,
+    capabilities: list<string>,
 }
 
 allocate-memory: func(len: u32) -> u32
